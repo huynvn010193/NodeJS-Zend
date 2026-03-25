@@ -39,6 +39,19 @@ app.post("/api/courses/add", (req, res) => {
   );
 });
 
+app.put("/api/courses/edit/:id", (req, res) => {
+  const course = courses.find((c) => c.id === parseInt(req.params.id));
+  if (!course) return res.status(404).send("Course not found");
+  course.name = req.body.name;
+  res.send(
+    JSON.stringify({
+      success: true,
+      message: "Course updated successfully",
+      data: courses,
+    }),
+  );
+});
+
 const PORT = process.env.PORT || 4000;
 
 app.listen(PORT, () => {
