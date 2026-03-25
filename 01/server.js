@@ -52,6 +52,21 @@ app.put("/api/courses/edit/:id", (req, res) => {
   );
 });
 
+app.delete("/api/courses/delete/:id", (req, res) => {
+  const courseIndex = courses.findIndex(
+    (c) => c.id === parseInt(req.params.id),
+  );
+  if (courseIndex === -1) return res.status(404).send("Course not found");
+  courses.splice(courseIndex, 1);
+  res.send(
+    JSON.stringify({
+      success: true,
+      message: "Course deleted successfully",
+      data: courses,
+    }),
+  );
+});
+
 const PORT = process.env.PORT || 4000;
 
 app.listen(PORT, () => {
