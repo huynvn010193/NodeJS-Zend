@@ -5,23 +5,36 @@ const controllerName = "items";
 const MainModel = require(__path_models + controllerName);
 
 router.get("/", async (req, res) => {
-  const data = await MainModel.listItems({}, { task: "all" });
-  res.status(200).json({
-    success: true,
-    data: data,
-  });
+  try {
+    const data = await MainModel.listItems({}, { task: "all" });
+    res.status(200).json({
+      success: true,
+      data: data,
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
 });
 
 router.get("/:id", async (req, res) => {
-  const data = await MainModel.listItems(
-    { id: req.params.id },
-    { task: "one" },
-  );
-  res.status(200).json({
-    success: true,
-    data: data,
-  });
-  res.send("Get one item with id: " + req.params.id);
+  try {
+    const data = await MainModel.listItems(
+      { id: req.params.id },
+      { task: "one" },
+    );
+    res.status(200).json({
+      success: true,
+      data: data,
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
 });
 
 router.post("/add", async (req, res) => {
@@ -30,22 +43,54 @@ router.post("/add", async (req, res) => {
   params.name = req.body.name;
   params.status = req.body.status;
 
-  const data = await MainModel.create(params);
-
-  res.status(200).json({
-    success: true,
-    data: data,
-  });
-
-  res.send("Đã vào add item");
+  try {
+    const data = await MainModel.create(params);
+    res.status(201).json({
+      success: true,
+      data: data,
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
 });
 
-router.put("/edit/:id", (req, res) => {
-  res.send("Đã vào edit item with id: " + req.params.id);
+router.put("/edit/:id", async (req, res) => {
+  try {
+    const data = await MainModel.editItem(
+      { id: req.params.id, body: req.body },
+      { task: "edit" },
+    );
+    res.status(200).json({
+      success: true,
+      data: data,
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
 });
 
-router.delete("/delete/:id", (req, res) => {
-  res.send("Đã vào delete item with id: " + req.params.id);
+router.delete("/delete/:id", async (req, res) => {
+  try {
+    const data = await MainModel.deleteItem(
+      { id: req.params.id },
+      { task: "one" },
+    );
+    res.status(200).json({
+      success: true,
+      data: data,
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
 });
 
 makeId = (number) => {

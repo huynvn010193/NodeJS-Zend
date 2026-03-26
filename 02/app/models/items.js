@@ -12,4 +12,14 @@ module.exports = {
   create: async (item) => {
     return await MainModel(item).save();
   },
+  editItem: async (params, options) => {
+    if (options.task === "edit") {
+      return await MainModel.updateOne({ id: params.id }, params.body);
+    }
+  },
+  deleteItem: async (params, options) => {
+    if (options.task === "one") {
+      return await MainModel.deleteOne({ id: params.id });
+    }
+  },
 };
