@@ -2,9 +2,13 @@ var createError = require("http-errors");
 var express = require("express");
 
 const mongoose = require("mongoose");
+const cors = require("cors");
 
 var app = express();
 app.use(express.json());
+
+// CORS middleware
+app.use(cors());
 
 const pathConfig = require("./path");
 global.__base = __dirname + "/";
