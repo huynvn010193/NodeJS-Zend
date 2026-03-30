@@ -6,7 +6,11 @@ const MainModel = require(__path_models + controllerName);
 
 router.get("/", async (req, res) => {
   try {
-    const data = await MainModel.listItems({}, { task: "all" });
+    let params = [];
+    params.sortField = req.query.orderBy;
+    params.sortType = req.query.orderDir;
+
+    const data = await MainModel.listItems(params, { task: "all" });
     res.status(200).json({
       success: true,
       data: data,
