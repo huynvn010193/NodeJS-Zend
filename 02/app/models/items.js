@@ -3,15 +3,14 @@ const MainModel = require(__path_schemas + "items");
 module.exports = {
   listItems: async (params, options) => {
     let sort = {};
-    // if (params.sortField !== undefined && params.sortType !== undefined) {
-    //   sort[params.sortField] = params.sortType;
-    // } else {
-    //   sort = { name: "asc" };
-    // }
+    let objWhere = {};
+
+    if (params.keyword) objWhere.name = new RegExp(params.keyword, "i");
+
     if (params.sortField) sort[params.sortField] = params.sortType;
 
     if (options.task === "all") {
-      return await MainModel.find({}).select("id name status").sort(sort);
+      return await MainModel.find(objWhere).select("id name status").sort(sort);
     }
     if (options.task === "one") {
       return await MainModel.find({ id: params.id }).select("id name status");

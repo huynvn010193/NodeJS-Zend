@@ -7,6 +7,7 @@ const MainModel = require(__path_models + controllerName);
 router.get("/", async (req, res) => {
   try {
     let params = [];
+    params.keyword = req.query.keyword;
     params.sortField = req.query.orderBy;
     params.sortType = req.query.orderDir;
 
