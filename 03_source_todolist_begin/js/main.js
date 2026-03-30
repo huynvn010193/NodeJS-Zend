@@ -23,7 +23,11 @@ $("#btn-toggle-form").click(() => {
 
 $("#btn-submit").click((e) => {
   e.preventDefault();
-  addItem();
+  if (inputId.val()) {
+    startEditItem(inputId.val());
+  } else {
+    addItem();
+  }
   resetInput();
 });
 
@@ -42,7 +46,7 @@ showItems = () => {
           <td>${name}</td>
           <td>${status}</td>
           <td>
-              <button class="btn btn-warning">Edit</button>
+              <button onClick="javascript:editItem('${id}')" class="btn btn-warning">Edit</button>
               <button onClick="javascript:deleteItem('${id}')" class="btn btn-danger">Delete</button>
           </td>
         </tr>
@@ -51,6 +55,39 @@ showItems = () => {
     }
     areaListTask.html(content);
   });
+};
+
+editItem = async (id) => {
+  toggleForm(true);
+  $.getJSON(`http://localhost:4000/api/v1/items/${id}`, (data) => {
+    if (data) {
+      let item = data.data[0];
+      inputId.val(item.id);
+      inputName.val(item.name);
+      inputStatus.val(item.status);
+    }
+  });
+};
+
+startEditItem = async (id) => {
+  if (inputName.val().trim()) {
+    let name = inputName.val();
+    let status = inputStatus.val();
+    const response = await fetch(
+      `http://localhost:4000/api/v1/items/edit/${id}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name, status }),
+      },
+    );
+    showItems();
+    toggleForm(false);
+  } else {
+    alert("Please fill in all fields");
+  }
 };
 
 deleteItem = async (id) => {
