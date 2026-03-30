@@ -4,6 +4,10 @@ let btnToggleForm = $("#btn-toggle-form");
 let inputId = $("#input-id");
 let inputName = $("#input-name");
 let inputStatus = $("#input-status");
+let sortDisplay = $("#sort-display");
+let params = [];
+params.orderBy = "name";
+params.orderDir = "asc";
 
 const ITEM_STATUS = [
   { name: "Small", status: "small", class: "dark" },
@@ -12,7 +16,15 @@ const ITEM_STATUS = [
 ];
 
 $(document).ready(() => {
-  showItems();
+  showItems(params);
+});
+
+$(".sort-value").click(function (e) {
+  params.orderBy = $(this).data("order-by");
+  params.orderDir = $(this).data("order-dir");
+  let display = `${params.orderBy.toUpperCase()} - ${params.orderDir.toUpperCase()}`;
+  showItems(params);
+  sortDisplay.html(display);
 });
 
 $("#btn-toggle-form").click(() => {
@@ -31,8 +43,19 @@ $("#btn-submit").click((e) => {
   resetInput();
 });
 
-showItems = () => {
-  $.getJSON("http://localhost:4000/api/v1/items", (data) => {
+$("#btn-cancel").click((e) => {
+  e.preventDefault();
+  resetInput();
+  $(this).data("toggle-form", false);
+  toggleForm(false);
+});
+
+showItems = (params = null) => {
+  let url = "";
+  if (params && params.orderBy) {
+    url += `?orderBy=${params.orderBy}&orderDir=${params.orderDir}`;
+  }
+  $.getJSON(`http://localhost:4000/api/v1/items${url}`, (data) => {
     let content = "";
     if (data) {
       $.map(data.data, (item, index) => {
