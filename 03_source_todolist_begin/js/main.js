@@ -24,6 +24,7 @@ $("#btn-toggle-form").click(() => {
 $("#btn-submit").click((e) => {
   e.preventDefault();
   addItem();
+  resetInput();
 });
 
 showItems = () => {
@@ -42,7 +43,7 @@ showItems = () => {
           <td>${status}</td>
           <td>
               <button class="btn btn-warning">Edit</button>
-              <button class="btn btn-danger">Delete</button>
+              <button onClick="javascript:deleteItem('${id}')" class="btn btn-danger">Delete</button>
           </td>
         </tr>
         `;
@@ -52,8 +53,34 @@ showItems = () => {
   });
 };
 
-addItem = () => {
+deleteItem = async (id) => {
+  let yes = confirm("Are you sure you want to delete this item?");
+  if (!yes) return;
+  const response = await fetch(
+    `http://localhost:4000/api/v1/items/delete/${id}`,
+    {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    },
+  );
+  showItems();
+};
+
+addItem = async () => {
   if (inputName.val().trim()) {
+    let name = inputName.val();
+    let status = inputStatus.val();
+    const response = await fetch("http://localhost:4000/api/v1/items/add", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ name, status }),
+    });
+    showItems();
+    toggleForm(false);
   } else {
     alert("Please fill in all fields");
   }
@@ -62,7 +89,7 @@ addItem = () => {
 showItemStatus = (status) => {
   let itemLevel = ITEM_STATUS.find((item) => item.status === status);
   if (itemLevel) {
-    return `<span class="badge badge-${itemLevel.class}">${itemLevel.name}</span>`;
+    return `<span class="badge bg-${itemLevel.class}">${itemLevel.name}</span>`;
   }
   return "";
 };
@@ -79,4 +106,10 @@ toggleForm = (isShow = true) => {
     $(btnToggleForm).addClass("btn-info");
     $(btnToggleForm).removeClass("btn-danger");
   }
+};
+
+resetInput = () => {
+  inputId.val("");
+  inputName.val("");
+  inputStatus.val("small");
 };
