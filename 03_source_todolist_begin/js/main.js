@@ -8,6 +8,7 @@ let sortDisplay = $("#sort-display");
 let params = [];
 params.orderBy = "name";
 params.orderDir = "asc";
+let API_URL = "http://localhost:4000/api/v1";
 
 const ITEM_STATUS = [
   { name: "Small", status: "small", class: "dark" },
@@ -64,9 +65,9 @@ showItems = (params = null) => {
   if (params && params.keyword) {
     url += url ? `&keyword=${params.keyword}` : `?keyword=${params.keyword}`;
   }
-  $.getJSON(`http://localhost:4000/api/v1/items${url}`, (data) => {
+  $.getJSON(`${API_URL}/items${url}`, (data) => {
     let content = "";
-    if (data) {
+    if (data && data.success) {
       $.map(data.data, (item, index) => {
         let idx = index + 1;
         let id = item.id;
@@ -99,7 +100,7 @@ showItems = (params = null) => {
 
 editItem = async (id) => {
   toggleForm(true);
-  $.getJSON(`http://localhost:4000/api/v1/items/${id}`, (data) => {
+  $.getJSON(`${API_URL}/items/${id}`, (data) => {
     if (data) {
       let item = data.data[0];
       inputId.val(item.id);
@@ -113,16 +114,13 @@ startEditItem = async (id) => {
   if (inputName.val().trim()) {
     let name = inputName.val();
     let status = inputStatus.val();
-    const response = await fetch(
-      `http://localhost:4000/api/v1/items/edit/${id}`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ name, status }),
+    const response = await fetch(`${API_URL}/items/edit/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
       },
-    );
+      body: JSON.stringify({ name, status }),
+    });
     showItems();
     toggleForm(false);
   } else {
@@ -133,15 +131,12 @@ startEditItem = async (id) => {
 deleteItem = async (id) => {
   let yes = confirm("Are you sure you want to delete this item?");
   if (!yes) return;
-  const response = await fetch(
-    `http://localhost:4000/api/v1/items/delete/${id}`,
-    {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
+  const response = await fetch(`${API_URL}/items/delete/${id}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
     },
-  );
+  });
   showItems();
 };
 
@@ -149,7 +144,7 @@ addItem = async () => {
   if (inputName.val().trim()) {
     let name = inputName.val();
     let status = inputStatus.val();
-    const response = await fetch("http://localhost:4000/api/v1/items/add", {
+    const response = await fetch(`${API_URL}/items/add`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
