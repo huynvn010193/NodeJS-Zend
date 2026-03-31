@@ -10,10 +10,10 @@ module.exports = {
     if (params.sortField) sort[params.sortField] = params.sortType;
 
     if (options.task === "all") {
-      return await MainModel.find(objWhere).select("id name status").sort(sort);
+      return await MainModel.find(objWhere).select("name status").sort(sort);
     }
     if (options.task === "one") {
-      return await MainModel.find({ id: params.id }).select("id name status");
+      return await MainModel.findById(params.id).select("name status");
     }
   },
   create: async (item) => {
@@ -21,12 +21,12 @@ module.exports = {
   },
   editItem: async (params, options) => {
     if (options.task === "edit") {
-      return await MainModel.updateOne({ id: params.id }, params.body);
+      return await MainModel.updateOne({ _id: params.id }, params.body);
     }
   },
   deleteItem: async (params, options) => {
     if (options.task === "one") {
-      return await MainModel.deleteOne({ id: params.id });
+      return await MainModel.deleteOne({ _id: params.id });
     }
   },
 };

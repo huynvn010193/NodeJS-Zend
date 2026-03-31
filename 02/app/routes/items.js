@@ -44,7 +44,6 @@ router.get("/:id", async (req, res) => {
 
 router.post("/add", async (req, res) => {
   let params = [];
-  params.id = makeId(5);
   params.name = req.body.name;
   params.status = req.body.status;
 
@@ -97,16 +96,5 @@ router.delete("/delete/:id", async (req, res) => {
     });
   }
 });
-
-makeId = (number) => {
-  let text = "";
-  let possible =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-  for (let i = 0; i < number; i++) {
-    text += possible.charAt(Math.floor(Math.random() * possible.length));
-  }
-  return text;
-};
 
 module.exports = router;
