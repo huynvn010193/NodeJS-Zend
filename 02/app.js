@@ -1,11 +1,13 @@
 var createError = require("http-errors");
 var express = require("express");
+var morgan = require("morgan");
 
 const mongoose = require("mongoose");
 const cors = require("cors");
 
 var app = express();
 app.use(express.json());
+app.use(morgan("tiny"));
 
 // CORS middleware
 app.use(cors());

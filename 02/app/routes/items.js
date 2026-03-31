@@ -1,11 +1,13 @@
 var express = require("express");
 var router = express.Router();
+var asyncHandler = require("../middleware/async");
 
 const controllerName = "items";
 const MainModel = require(__path_models + controllerName);
 
-router.get("/", async (req, res) => {
-  try {
+router.get(
+  "/",
+  asyncHandler(async (req, res) => {
     let params = [];
     params.keyword = req.query.keyword;
     params.sortField = req.query.orderBy;
@@ -16,16 +18,12 @@ router.get("/", async (req, res) => {
       success: true,
       data: data,
     });
-  } catch (error) {
-    res.status(400).json({
-      success: false,
-      message: error.message,
-    });
-  }
-});
+  }),
+);
 
-router.get("/:id", async (req, res) => {
-  try {
+router.get(
+  "/:id",
+  asyncHandler(async (req, res) => {
     const data = await MainModel.listItems(
       { id: req.params.id },
       { task: "one" },
@@ -34,35 +32,27 @@ router.get("/:id", async (req, res) => {
       success: true,
       data: data,
     });
-  } catch (error) {
-    res.status(400).json({
-      success: false,
-      message: error.message,
-    });
-  }
-});
+  }),
+);
 
-router.post("/add", async (req, res) => {
-  let params = [];
-  params.name = req.body.name;
-  params.status = req.body.status;
+router.post(
+  "/add",
+  asyncHandler(async (req, res) => {
+    let params = [];
+    params.name = req.body.name;
+    params.status = req.body.status;
 
-  try {
     const data = await MainModel.create(params);
     res.status(201).json({
       success: true,
       data: data,
     });
-  } catch (error) {
-    res.status(400).json({
-      success: false,
-      message: error.message,
-    });
-  }
-});
+  }),
+);
 
-router.put("/edit/:id", async (req, res) => {
-  try {
+router.put(
+  "/edit/:id",
+  asyncHandler(async (req, res) => {
     const data = await MainModel.editItem(
       { id: req.params.id, body: req.body },
       { task: "edit" },
@@ -71,16 +61,12 @@ router.put("/edit/:id", async (req, res) => {
       success: true,
       data: data,
     });
-  } catch (error) {
-    res.status(400).json({
-      success: false,
-      message: error.message,
-    });
-  }
-});
+  }),
+);
 
-router.delete("/delete/:id", async (req, res) => {
-  try {
+router.delete(
+  "/delete/:id",
+  asyncHandler(async (req, res) => {
     const data = await MainModel.deleteItem(
       { id: req.params.id },
       { task: "one" },
@@ -89,12 +75,7 @@ router.delete("/delete/:id", async (req, res) => {
       success: true,
       data: data,
     });
-  } catch (error) {
-    res.status(400).json({
-      success: false,
-      message: error.message,
-    });
-  }
-});
+  }),
+);
 
 module.exports = router;
