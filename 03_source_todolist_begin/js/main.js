@@ -27,6 +27,12 @@ $(".sort-value").click(function (e) {
   sortDisplay.html(display);
 });
 
+$("#btn-search").click(function (e) {
+  console.log("search");
+  params.keyword = $("#input-search").val();
+  showItems(params);
+});
+
 $("#btn-toggle-form").click(() => {
   let isShow = $(this).data("toggle-form");
   $(this).data("toggle-form", !isShow);
@@ -55,6 +61,9 @@ showItems = (params = null) => {
   if (params && params.orderBy) {
     url += `?orderBy=${params.orderBy}&orderDir=${params.orderDir}`;
   }
+  if (params && params.keyword) {
+    url += url ? `&keyword=${params.keyword}` : `?keyword=${params.keyword}`;
+  }
   $.getJSON(`http://localhost:4000/api/v1/items${url}`, (data) => {
     let content = "";
     if (data) {
@@ -63,6 +72,14 @@ showItems = (params = null) => {
         let id = item.id;
         let name = item.name;
         let status = showItemStatus(item.status);
+        if (params && params.keyword) {
+          name = name.replace(
+            new RegExp(params.keyword, "gi"),
+            (searchResult) => {
+              return `<mark>${searchResult}</mark>`;
+            },
+          );
+        }
         content += `
          <tr>
           <td>${idx}</td>
