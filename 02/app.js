@@ -21,6 +21,7 @@ global.__path_schemas = __path_app + pathConfig.folder_schemas + "/";
 global.__path_models = __path_app + pathConfig.folder_models + "/";
 global.__path_routers = __path_app + pathConfig.folder_routers + "/";
 global.__path_configs = __path_app + pathConfig.folder_configs + "/";
+global.__path_validates = __path_app + pathConfig.folder_validates + "/";
 
 const systemConfig = require(__path_configs + "system");
 const databaseConfig = require(__path_configs + "database");

@@ -10,10 +10,10 @@ module.exports = {
     if (params.sortField) sort[params.sortField] = params.sortType;
 
     if (options.task === "all") {
-      return await MainModel.find(objWhere).select("name status").sort(sort);
+      return await MainModel.find(objWhere).select({}).sort(sort);
     }
     if (options.task === "one") {
-      return await MainModel.findById(params.id).select("name status");
+      return await MainModel.findById(params.id).select({});
     }
   },
   create: async (item) => {

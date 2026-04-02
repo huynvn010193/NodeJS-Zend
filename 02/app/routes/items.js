@@ -4,6 +4,8 @@ var asyncHandler = require("../middleware/async");
 
 const controllerName = "items";
 const MainModel = require(__path_models + controllerName);
+const MainValidate = require(__path_validates + controllerName);
+const ErrorResponse = require("../utils/ErrorResponse");
 
 router.get(
   "/",
@@ -38,11 +40,13 @@ router.get(
 router.post(
   "/add",
   asyncHandler(async (req, res) => {
-    let params = [];
-    params.name = req.body.name;
-    params.status = req.body.status;
-
-    const data = await MainModel.create(params);
+    let err = await MainValidate.validator(req);
+    if (err) {
+      console.log(err);
+      res.send(new ErrorResponse(400, err));
+      return;
+    }
+    const data = await MainModel.create(req.body);
     res.status(201).json({
       success: true,
       data: data,
