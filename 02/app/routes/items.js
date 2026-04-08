@@ -10,15 +10,11 @@ const ErrorResponse = require("../utils/ErrorResponse");
 router.get(
   "/",
   asyncHandler(async (req, res) => {
-    let params = [];
-    params.keyword = req.query.keyword;
-    params.sortField = req.query.orderBy;
-    params.sortType = req.query.orderDir;
-
-    const data = await MainModel.listItems(params, { task: "all" });
+    const data = await MainModel.listItems(req.query, { task: "all" });
     res.status(200).json({
       success: true,
       data: data,
+      count: data.length,
     });
   }),
 );
