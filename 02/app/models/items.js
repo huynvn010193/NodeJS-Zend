@@ -37,9 +37,9 @@ const parseBracketQuery = (query) => {
 module.exports = {
   listItems: async (params, options) => {
     const queryFind = { ...params };
-    let select;
+    let select, sort;
 
-    let removeFields = ["select"];
+    let removeFields = ["select", "sort"];
     removeFields.forEach((field) => delete queryFind[field]);
 
     const find = parseBracketQuery(queryFind);
@@ -48,8 +48,12 @@ module.exports = {
       select = params.select.split(",").join(" ");
     }
 
+    if (params.sort) {
+      sort = params.sort.split(",").join(" ");
+    }
+
     if (options.task === "all") {
-      return await MainModel.find(find).select(select).sort();
+      return await MainModel.find(find).select(select).sort(sort);
     }
     if (options.task === "one") {
       return await MainModel.findById(params.id).select({});
