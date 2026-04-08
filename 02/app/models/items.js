@@ -39,7 +39,7 @@ module.exports = {
     const queryFind = { ...params };
     let select, sort;
 
-    let removeFields = ["select", "sort"];
+    let removeFields = ["select", "sort", "page", "limit"];
     removeFields.forEach((field) => delete queryFind[field]);
 
     const find = parseBracketQuery(queryFind);
@@ -52,8 +52,17 @@ module.exports = {
       sort = params.sort.split(",").join(" ");
     }
 
+    // pagination
+    const page = parseInt(params.page) || 1;
+    const limit = parseInt(params.limit) || 3;
+    const skip = (page - 1) * limit;
+
     if (options.task === "all") {
-      return await MainModel.find(find).select(select).sort(sort);
+      return await MainModel.find(find)
+        .select(select)
+        .sort(sort)
+        .skip(skip)
+        .limit(limit);
     }
     if (options.task === "one") {
       return await MainModel.findById(params.id).select({});
