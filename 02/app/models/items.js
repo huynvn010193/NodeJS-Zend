@@ -3,6 +3,8 @@ const MainModel = require(__path_schemas + "items");
 // TODO: biến đổi: careers[in]=5d7a514b5d2c12c7449be025 => { careers: { $in: [5d7a514b5d2c12c7449be025] } }
 const parseBracketQuery = (query) => {
   return Object.entries(query).reduce((acc, [key, value]) => {
+    if (key === "select") return acc;
+
     const match = key.match(/^(.+)\[(.+)\]$/);
 
     if (match) {
@@ -34,10 +36,20 @@ const parseBracketQuery = (query) => {
 
 module.exports = {
   listItems: async (params, options) => {
-    const newQuery = parseBracketQuery(params);
+    const queryFind = { ...params };
+    let select;
+
+    let removeFields = ["select"];
+    removeFields.forEach((field) => delete queryFind[field]);
+
+    const find = parseBracketQuery(queryFind);
+
+    if (params.select) {
+      select = params.select.split(",").join(" ");
+    }
 
     if (options.task === "all") {
-      return await MainModel.find(newQuery).select({});
+      return await MainModel.find(find).select(select).sort();
     }
     if (options.task === "one") {
       return await MainModel.findById(params.id).select({});
