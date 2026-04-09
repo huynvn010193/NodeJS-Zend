@@ -3,4 +3,5 @@ module.exports = {
   password: "Nike08817",
   database: "Node-Zend",
   col_items: "items",
+  col_careers: "careers",
 };

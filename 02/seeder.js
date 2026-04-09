@@ -14,14 +14,20 @@ mongoose.connect(
 );
 
 const ItemSchema = require("./app/schemas/items");
+const CareersSchema = require("./app/schemas/careers");
 
 const Items = JSON.parse(
   fs.readFileSync(`${__dirname}/app/_data/items.json`, "utf-8"),
 );
 
+const Careers = JSON.parse(
+  fs.readFileSync(`${__dirname}/app/_data/careers.json`, "utf-8"),
+);
+
 const importData = async () => {
   try {
     await ItemSchema.create(Items);
+    await CareersSchema.create(Careers);
     console.log("Data imported successfully");
     process.exit();
   } catch (error) {
@@ -32,6 +38,7 @@ const importData = async () => {
 const deleteData = async () => {
   try {
     await ItemSchema.deleteMany({});
+    await CareersSchema.deleteMany({});
     console.log("Data deleted successfully");
     process.exit();
   } catch (error) {
