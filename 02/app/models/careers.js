@@ -76,6 +76,22 @@ module.exports = {
       return await MainModel.updateOne({ _id: params.id }, params.body);
     }
   },
+  even: async (params, options) => {
+    if (options.task === "like") {
+      // TODO: Update ko cần phải truyền like, chỉ cần truyền id, trong model sẽ tự động tăng like lên 1
+      return await MainModel.findByIdAndUpdate(
+        params.id,
+        { $inc: { like: 1 } },
+        { returnDocument: "after" },
+      );
+
+      // return await MainModel.findByIdAndUpdate(
+      //   params.id,
+      //   { like: params.like },
+      //   { returnDocument: "after" },
+      // );
+    }
+  },
   deleteItem: async (params, options) => {
     if (options.task === "one") {
       return await MainModel.deleteOne({ _id: params.id });

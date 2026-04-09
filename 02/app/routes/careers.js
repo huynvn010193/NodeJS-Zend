@@ -10,8 +10,13 @@ const ErrorResponse = require("../utils/ErrorResponse");
 router.get(
   "/",
   asyncHandler(async (req, res) => {
-    console.log("Careers:");
     const data = await MainModel.listCareers(req.query, { task: "all" });
+    if (!data) {
+      res.status(200).json({
+        success: true,
+        data: "Dữ liệu không tồn tại",
+      });
+    }
     res.status(200).json({
       success: true,
       data: data,
@@ -27,6 +32,12 @@ router.get(
       { id: req.params.id },
       { task: "one" },
     );
+    if (!data) {
+      res.status(200).json({
+        success: true,
+        data: "Dữ liệu không tồn tại",
+      });
+    }
     res.status(200).json({
       success: true,
       data: data,
@@ -62,6 +73,22 @@ router.put(
         data: data,
       });
     }
+  }),
+);
+
+// TODO: Like careers
+router.put(
+  "/like/:id",
+  asyncHandler(async (req, res, next) => {
+    const data = await MainModel.even({ id: req.params.id }, { task: "like" });
+    if (!data) {
+      return next(new ErrorResponse(404, "Dữ liệu không tồn tại"));
+    }
+
+    res.status(200).json({
+      success: true,
+      data: data,
+    });
   }),
 );
 
