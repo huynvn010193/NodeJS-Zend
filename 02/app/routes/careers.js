@@ -76,11 +76,14 @@ router.put(
   }),
 );
 
-// TODO: Like careers
+// TODO: Like dislike careers
 router.put(
-  "/like/:id",
+  "/even/:type/:id",
   asyncHandler(async (req, res, next) => {
-    const data = await MainModel.even({ id: req.params.id }, { task: "like" });
+    const data = await MainModel.even({
+      id: req.params.id,
+      type: req.params.type,
+    });
     if (!data) {
       return next(new ErrorResponse(404, "Dữ liệu không tồn tại"));
     }
