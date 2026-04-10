@@ -2,6 +2,7 @@ var ErrorResponse = require("../utils/ErrorResponse");
 var notify = require("../configs/notify");
 
 const errorHandler = (err, req, res, next) => {
+  console.error(err);
   let error = { ...err };
   if (err.name === "CastError") {
     let message = notify.ERROR_CASTEROR;
