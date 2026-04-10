@@ -4,4 +4,5 @@ module.exports = {
   database: "Node-Zend",
   col_items: "items",
   col_careers: "careers",
+  col_users: "users",
 };
