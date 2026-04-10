@@ -12,10 +12,10 @@ router.post(
   asyncHandler(async (req, res, next) => {
     let err = await validateReq(req, res, next);
     if (!err) {
-      const data = await MainModel.register(req.body);
+      const token = await MainModel.register(req.body);
       res.status(201).json({
         success: true,
-        data: data,
+        token,
       });
     }
   }),
