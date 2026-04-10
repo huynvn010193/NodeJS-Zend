@@ -9,4 +9,13 @@ const schema = new mongoose.Schema({
   dislike: Number,
 });
 
+schema.virtual("restaurants", {
+  ref: "items",
+  localField: "_id",
+  foreignField: "careers",
+});
+
+schema.set("toObject", { virtuals: true });
+schema.set("toJSON", { virtuals: true });
+
 module.exports = mongoose.model(databaseConfig.col_careers, schema);
