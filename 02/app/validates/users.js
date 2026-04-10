@@ -6,6 +6,7 @@ const options = {
   username: { min: 3, max: 100 },
   email: { min: 1, max: 30 },
   password: { min: 4, max: 30 },
+  enum: ["publisher", "user"],
 };
 
 module.exports = {
@@ -13,6 +14,7 @@ module.exports = {
     const username = String(req.body?.username || "").trim();
     const email = String(req.body?.email || "").trim();
     const password = String(req.body?.password || "").trim();
+    const role = String(req.body?.role || "").trim();
 
     const errors = [];
     let message = {};
@@ -33,17 +35,10 @@ module.exports = {
       });
     }
 
-    if (
-      email.length <= options.email.min ||
-      email.length >= options.email.max
-    ) {
+    if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
       errors.push({
         param: "email",
-        msg: util.format(
-          notify.ERROR_EMAIL,
-          options.email.min,
-          options.email.max,
-        ),
+        msg: util.format(notify.ERROR_EMAIL),
         value: req.body?.email,
         location: "body",
       });
@@ -61,6 +56,15 @@ module.exports = {
           options.password.max,
         ),
         value: req.body?.password,
+        location: "body",
+      });
+    }
+
+    if (!options.enum.includes(role)) {
+      errors.push({
+        param: "role",
+        msg: util.format(notify.ERROR_ROLE),
+        value: req.body?.role,
         location: "body",
       });
     }
