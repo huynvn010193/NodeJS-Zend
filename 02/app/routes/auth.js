@@ -24,7 +24,7 @@ router.post(
 router.post(
   "/login",
   asyncHandler(async (req, res, next) => {
-    const token = await MainModel.login(req.body);
+    const token = await MainModel.login(req.body, res);
   }),
 );
 
