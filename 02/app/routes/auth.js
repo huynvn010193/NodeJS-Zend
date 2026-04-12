@@ -21,6 +21,13 @@ router.post(
   }),
 );
 
+router.post(
+  "/login",
+  asyncHandler(async (req, res, next) => {
+    const token = await MainModel.login(req.body);
+  }),
+);
+
 const validateReq = async (req, res, next) => {
   let err = await MainValidate.validator(req);
   if (Object.keys(err).length > 0) {

@@ -24,4 +24,8 @@ schema.methods.getSignedJWT = function () {
   });
 };
 
+schema.statics.findByCredentials = async function (email, password) {
+  console.log(email, password);
+};
+
 module.exports = mongoose.model(databaseConfig.col_users, schema);

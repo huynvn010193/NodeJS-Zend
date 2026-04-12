@@ -5,4 +5,8 @@ module.exports = {
     const user = await MainModel(item).save();
     return user.getSignedJWT();
   },
+  login: async (item) => {
+    const { email, password } = item;
+    const result = await MainModel.findByCredentials(email, password);
+  },
 };
