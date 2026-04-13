@@ -6,4 +6,6 @@ module.exports = {
   ERROR_EMAIL: "Email không hợp lệ",
   ERROR_ROLE: "Role không hợp lệ",
   ERROR_PASSWORD: "Chiều dài từ %d đến %d ký tự",
+  ERROR_EMAIL_PASSWORD: "Email hoặc mật khẩu không chính xác",
+  ERROR_EMAIL_PASSWORD_NOT_EMPTY: "Email hoặc mật khẩu không được rỗng",
 };

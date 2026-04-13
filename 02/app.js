@@ -2,6 +2,7 @@ var createError = require("http-errors");
 var express = require("express");
 var morgan = require("morgan");
 var errorHandler = require("./app/middleware/error");
+var cookieParser = require("cookie-parser");
 
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -12,6 +13,9 @@ app.use(morgan("tiny"));
 
 // CORS middleware
 app.use(cors());
+
+// FIXME : cookieParser
+app.use(cookieParser());
 
 const pathConfig = require("./path");
 global.__base = __dirname + "/";
