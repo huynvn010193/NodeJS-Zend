@@ -6,6 +6,8 @@ const controllerName = "auth";
 const MainModel = require(__path_models + controllerName);
 const MainValidate = require(__path_validates + controllerName);
 const ErrorResponse = require("../utils/ErrorResponse");
+var Protect = require("../middleware/auth");
+
 const e = require("express");
 
 router.post(
@@ -28,6 +30,17 @@ router.post(
     if (token) {
       saveCookieResponse(res, 200, token);
     }
+  }),
+);
+
+router.get(
+  "/me",
+  Protect,
+  asyncHandler(async (req, res, next) => {
+    res.status(200).json({
+      success: true,
+      data: req.user,
+    });
   }),
 );
 

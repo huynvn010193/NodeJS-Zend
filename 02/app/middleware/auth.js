@@ -2,6 +2,7 @@ const asyncHandler = require("./async");
 var ErrorResponse = require("../utils/ErrorResponse");
 const notify = require(__path_configs + "notify");
 const systemConfig = require(__path_configs + "system");
+var UserModel = require(__path_models + "users");
 
 var jwt = require("jsonwebtoken");
 
@@ -19,6 +20,7 @@ const protect = asyncHandler(async (req, res, next) => {
     // TODO: decode token
     try {
       const decoded = jwt.verify(token, systemConfig.JWT_SECRET);
+      req.user = await UserModel.listItems({ id: decoded.id }, { task: "one" });
       next();
     } catch (error) {
       return next(new ErrorResponse(401, notify.ERROR_LOGIN_USED));
