@@ -69,7 +69,9 @@ module.exports = {
     }
   },
   create: async (item) => {
-    return await MainModel(item).save();
+    // TODO: khi tạo user phải tạo token
+    const user = await MainModel(item).save();
+    return user.getSignedJWT();
   },
   editItem: async (params, options) => {
     if (options.task === "edit") {

@@ -8,13 +8,13 @@ module.exports = {
   login: async (item, res) => {
     const { email, password } = item;
     const result = await MainModel.findByCredentials(email, password);
-    console.log("result", result);
     if (result.err) {
       res.status(401).json({
-        success: false,
+        success: true,
         error: result.err,
       });
+      return false;
     }
-    console.log("user", result.user);
+    return result.user.getSignedJWT();
   },
 };
