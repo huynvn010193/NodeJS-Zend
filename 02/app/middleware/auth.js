@@ -6,7 +6,7 @@ var UserModel = require(__path_models + "users");
 
 var jwt = require("jsonwebtoken");
 
-const protect = asyncHandler(async (req, res, next) => {
+exports.protect = asyncHandler(async (req, res, next) => {
   let token = "";
   if (
     req.headers.authorization &&
@@ -25,7 +25,19 @@ const protect = asyncHandler(async (req, res, next) => {
     } catch (error) {
       return next(new ErrorResponse(401, notify.ERROR_LOGIN_USED));
     }
+  } else {
+    return next(new ErrorResponse(401, notify.ERROR_LOGIN_USED));
   }
 });
 
-module.exports = protect;
+// TODO: dùng ...roles để chuyển chuỗi string "publisher", "admin" thành mảng ["publisher", "admin"]
+exports.authorize = (...roles) => {
+  return (req, res, next) => {
+    console.log(req.user.role);
+
+    if (!roles.includes(req.user.role)) {
+      return next(new ErrorResponse(403, notify.ERROR_PERMISSION));
+    }
+    next();
+  };
+};

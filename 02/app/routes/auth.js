@@ -6,7 +6,7 @@ const controllerName = "auth";
 const MainModel = require(__path_models + controllerName);
 const MainValidate = require(__path_validates + controllerName);
 const ErrorResponse = require("../utils/ErrorResponse");
-var Protect = require("../middleware/auth");
+var { protect } = require("../middleware/auth");
 
 const e = require("express");
 
@@ -35,7 +35,7 @@ router.post(
 
 router.get(
   "/me",
-  Protect,
+  protect,
   asyncHandler(async (req, res, next) => {
     res.status(200).json({
       success: true,

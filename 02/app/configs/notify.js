@@ -9,4 +9,5 @@ module.exports = {
   ERROR_EMAIL_PASSWORD: "Email hoặc mật khẩu không chính xác",
   ERROR_EMAIL_PASSWORD_NOT_EMPTY: "Email hoặc mật khẩu không được rỗng",
   ERROR_LOGIN_USED: "Vui lòng đăng nhập để thực hiện chức năng này",
+  ERROR_PERMISSION: "Bạn không có quyền thực hiện chức năng này",
 };

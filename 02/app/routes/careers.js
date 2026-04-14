@@ -7,6 +7,8 @@ const MainModel = require(__path_models + controllerName);
 const MainValidate = require(__path_validates + controllerName);
 const ErrorResponse = require("../utils/ErrorResponse");
 
+var { protect, authorize } = require("../middleware/auth");
+
 router.get(
   "/",
   asyncHandler(async (req, res) => {
@@ -79,6 +81,8 @@ router.put(
 // TODO: Like dislike careers
 router.put(
   "/even/:type/:id",
+  protect,
+  authorize("publisher", "admin"),
   asyncHandler(async (req, res, next) => {
     const data = await MainModel.even({
       id: req.params.id,

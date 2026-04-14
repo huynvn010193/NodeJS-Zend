@@ -1,7 +1,7 @@
 var express = require("express");
 var router = express.Router();
 var asyncHandler = require("../middleware/async");
-var Protect = require("../middleware/auth");
+var { protect, authorize } = require("../middleware/auth");
 
 const controllerName = "items";
 const MainModel = require(__path_models + controllerName);
@@ -36,7 +36,8 @@ router.get(
 
 router.post(
   "/add",
-  Protect,
+  protect,
+  authorize("publisher", "admin"),
   asyncHandler(async (req, res, next) => {
     let err = await validateReq(req, res, next);
     if (!err) {
@@ -51,7 +52,8 @@ router.post(
 
 router.put(
   "/edit/:id",
-  Protect,
+  protect,
+  authorize("publisher", "admin"),
   asyncHandler(async (req, res, next) => {
     let err = await validateReq(req, res, next);
     if (!err) {
@@ -69,6 +71,7 @@ router.put(
 
 router.delete(
   "/delete/:id",
+  authorize("publisher", "admin"),
   asyncHandler(async (req, res) => {
     const data = await MainModel.deleteItem(
       { id: req.params.id },
