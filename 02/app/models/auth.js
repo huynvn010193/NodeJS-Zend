@@ -17,4 +17,13 @@ module.exports = {
     }
     return result.user.getSignedJWT();
   },
+  forgotPassword: async (item) => {
+    const user = await MainModel.findOne({ email: item.email });
+    if (!user) {
+      return false;
+    }
+    const resetToken = user.resetPassword();
+    await user.save();
+    return resetToken;
+  },
 };

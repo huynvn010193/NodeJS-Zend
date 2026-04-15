@@ -7,6 +7,7 @@ const MainModel = require(__path_models + controllerName);
 const MainValidate = require(__path_validates + controllerName);
 const ErrorResponse = require("../utils/ErrorResponse");
 var { protect } = require("../middleware/auth");
+const notify = require(__path_configs + "notify");
 
 const e = require("express");
 
@@ -40,6 +41,23 @@ router.get(
     res.status(200).json({
       success: true,
       data: req.user,
+    });
+  }),
+);
+
+router.post(
+  "/forgotpassword",
+  asyncHandler(async (req, res, next) => {
+    const result = await MainModel.forgotPassword(req.body);
+    if (!result) {
+      res.status(401).json({
+        success: true,
+        message: notify.ERROR_EMAIL_NOT_EXIST,
+      });
+    }
+    res.status(200).json({
+      success: true,
+      resetToken: result,
     });
   }),
 );
