@@ -63,19 +63,20 @@ router.post(
 );
 
 router.post(
-  "/resetPassword/:resettoken",
+  "/resetPassword/:resetToken",
   asyncHandler(async (req, res, next) => {
-    const result = await MainModel.forgotPassword(req.body);
+    console.log("req", req.params);
+    const result = await MainModel.resetPassword({
+      resetToken: req.params.resetToken,
+      pawssword: req.body.password,
+    });
+
     if (!result) {
       res.status(401).json({
         success: true,
-        message: notify.ERROR_EMAIL_NOT_EXIST,
+        message: notify.ERROR_INVALID_TOKEN,
       });
     }
-    res.status(200).json({
-      success: true,
-      data: result,
-    });
   }),
 );
 

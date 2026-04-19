@@ -11,4 +11,5 @@ module.exports = {
   ERROR_LOGIN_USED: "Vui lòng đăng nhập để thực hiện chức năng này",
   ERROR_PERMISSION: "Bạn không có quyền thực hiện chức năng này",
   ERROR_EMAIL_NOT_EXIST: "Email không tồn tại",
+  ERROR_INVALID_TOKEN: "Không tồn tại Token",
 };

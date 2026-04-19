@@ -1,5 +1,6 @@
 const MainModel = require(__path_schemas + "users");
 const sendEmail = require("./../utils/sendEmail");
+var crypto = require("crypto");
 
 module.exports = {
   register: async (item) => {
@@ -27,7 +28,7 @@ module.exports = {
     await user.save();
 
     // TODO: create reset url
-    const resetURL = `/api/v1/resetPassword/${resetToken}`;
+    const resetURL = `/api/v1/auth/resetPassword/${resetToken}`;
     const message = `Truy cập vào đường dẫn sau đổi password: \n\n ${resetURL}`;
 
     try {
@@ -45,5 +46,23 @@ module.exports = {
     }
 
     return resetToken;
+  },
+  resetPassword: async (item) => {
+    const resetPassToken = crypto
+      .createHash("sha256")
+      .update(item.resetToken)
+      .digest("hex");
+
+    const user = await MainModel.findOne({
+      resetPassToken,
+      resetPassToken,
+      resetPassTokenExp: { $gt: Date.now() },
+    });
+
+    if (!user) return false;
+    user.password = item.password;
+    user.resetPassToken = undefined;
+    user.resetPassTokenExp = undefined;
+    await user.save();
   },
 };
