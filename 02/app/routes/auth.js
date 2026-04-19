@@ -57,7 +57,24 @@ router.post(
     }
     res.status(200).json({
       success: true,
-      resetToken: result,
+      data: result,
+    });
+  }),
+);
+
+router.post(
+  "/resetPassword/:resettoken",
+  asyncHandler(async (req, res, next) => {
+    const result = await MainModel.forgotPassword(req.body);
+    if (!result) {
+      res.status(401).json({
+        success: true,
+        message: notify.ERROR_EMAIL_NOT_EXIST,
+      });
+    }
+    res.status(200).json({
+      success: true,
+      data: result,
     });
   }),
 );
