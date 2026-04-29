@@ -5,6 +5,8 @@ const systemConfig = require(__path_configs + "system");
 const controllerName = "auth";
 const MainModel = require(__path_models + controllerName);
 const MainValidate = require(__path_validates + controllerName);
+const MainValidatePassword = require(__path_validates + "password");
+
 const ErrorResponse = require("../utils/ErrorResponse");
 var { protect } = require("../middleware/auth");
 const notify = require(__path_configs + "notify");
@@ -66,15 +68,22 @@ router.post(
   "/resetPassword/:resetToken",
   asyncHandler(async (req, res, next) => {
     console.log("req", req.params);
-    const result = await MainModel.resetPassword({
-      resetToken: req.params.resetToken,
-      pawssword: req.body.password,
-    });
+    let err = await validatePasswordReq(req, res, next);
+    if (!err) {
+      const user = await MainModel.resetPassword({
+        resetToken: req.params.resetToken,
+        password: req.body.password,
+      });
+      if (!user) {
+        res.status(401).json({
+          success: true,
+          message: notify.ERROR_INVALID_TOKEN,
+        });
+      }
 
-    if (!result) {
-      res.status(401).json({
+      res.status(200).json({
         success: true,
-        message: notify.ERROR_INVALID_TOKEN,
+        data: user,
       });
     }
   }),
@@ -82,6 +91,15 @@ router.post(
 
 const validateReq = async (req, res, next) => {
   let err = await MainValidate.validator(req);
+  if (Object.keys(err).length > 0) {
+    next(new ErrorResponse(400, err));
+    return true;
+  }
+  return false;
+};
+
+const validatePasswordReq = async (req, res, next) => {
+  let err = await MainValidatePassword.validator(req);
   if (Object.keys(err).length > 0) {
     next(new ErrorResponse(400, err));
     return true;

@@ -54,8 +54,7 @@ module.exports = {
       .digest("hex");
 
     const user = await MainModel.findOne({
-      resetPassToken,
-      resetPassToken,
+      resetPassToken: resetPassToken,
       resetPassTokenExp: { $gt: Date.now() },
     });
 
@@ -64,5 +63,6 @@ module.exports = {
     user.resetPassToken = undefined;
     user.resetPassTokenExp = undefined;
     await user.save();
+    return user;
   },
 };
