@@ -89,6 +89,22 @@ router.post(
   }),
 );
 
+router.get(
+  "/logout",
+  protect,
+  asyncHandler(async (req, res, next) => {
+    res
+      .status(200)
+      .cookie("token", "none", {
+        expires: new Date(Date.now() + 10 * 1000),
+        httpOnly: true,
+      })
+      .json({
+        success: true,
+      });
+  }),
+);
+
 const validateReq = async (req, res, next) => {
   let err = await MainValidate.validator(req);
   if (Object.keys(err).length > 0) {
